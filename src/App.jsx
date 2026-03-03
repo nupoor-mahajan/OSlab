@@ -1,4 +1,4 @@
-import { BrowserRouter, Routes, Route } from 'react-router-dom'
+import { HashRouter as Router, Routes, Route } from 'react-router-dom';
 import Navbar from './components/Navbar'
 import Home from './pages/Home'
 import Module1 from './pages/Module1'
@@ -12,9 +12,11 @@ import DiskScheduling from './pages/simulations/DiskScheduling'
 import Deadlock from './pages/simulations/Deadlock'
 import './index.css'
 
+
 function App() {
   return (
-    <BrowserRouter>
+    // 2. Use the Router (HashRouter) here
+    <Router>
       <div className="min-h-screen bg-[#0a0a0f] text-white">
         <Navbar />
         <Routes>
@@ -30,7 +32,7 @@ function App() {
           <Route path="/sim/deadlock" element={<Deadlock />} />
         </Routes>
       </div>
-    </BrowserRouter>
+    </Router>
   )
 }
 
