@@ -81,21 +81,23 @@ export default function Home() {
               Virtual Simulators <Cpu size={18} />
             </Link>
           </div>
-
-          {/* Stats / Quick Links */}
-          <div className="grid grid-cols-3 gap-6 max-w-xl mx-auto">
-            {[
-              { icon: BookOpen, val: '4', label: 'Theory Modules' },
-              { icon: Award, val: 'Full', label: 'Course Coverage' },
-              { icon: Users, val: '5+', label: 'Lab Simulators' },
-            ].map(({ icon: Icon, val, label }) => (
-              <div key={label} className="bg-white/5 border border-white/10 rounded-2xl p-6 text-center">
-                <Icon size={24} className="text-cyan-400 mx-auto mb-2" />
-                <div className="text-2xl font-bold text-white">{val}</div>
-                <div className="text-xs text-gray-500 uppercase tracking-widest">{label}</div>
-              </div>
-            ))}
-          </div>
+{/* Stats / Quick Links */}
+<div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6 max-w-2xl mx-auto px-4">
+  {[
+    { icon: BookOpen, val: '4', label: 'Theory Modules' },
+    { icon: Award, val: 'Full', label: 'Course Coverage' },
+    { icon: Users, val: '5+', label: 'Lab Simulators' },
+  ].map(({ icon: Icon, val, label }) => (
+    <div 
+      key={label} 
+      className="bg-white/5 border border-white/10 rounded-2xl p-4 md:p-6 text-center transition-transform hover:scale-105"
+    >
+      <Icon size={24} className="text-cyan-400 mx-auto mb-2" />
+      <div className="text-xl md:text-2xl font-bold text-white">{val}</div>
+      <div className="text-[10px] md:text-xs text-gray-500 uppercase tracking-widest">{label}</div>
+    </div>
+  ))}
+</div>
         </div>
       </section>
 

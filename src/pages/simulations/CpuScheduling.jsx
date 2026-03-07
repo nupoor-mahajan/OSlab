@@ -158,7 +158,7 @@ export default function CpuScheduling() {
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-        {/* Left Column: Inputs */}
+        {/* Left Column: Inputs & Results */}
         <div className="lg:col-span-2 space-y-6">
           
           {/* Comparison View */}
@@ -179,9 +179,8 @@ export default function CpuScheduling() {
                       <span className="text-gray-500">Avg Turnaround:</span>
                       <span className="text-white font-mono">{data.avgTAT}ms</span>
                     </div>
-                    {/* Tiny visual bar */}
                     <div className="mt-3 h-1.5 w-full bg-white/5 rounded-full overflow-hidden">
-                      <div className="h-full bg-fuchsia-500" style={{width: `${(1 - data.avgWT/20) * 100}%`}} />
+                      <div className="h-full bg-fuchsia-500" style={{width: `${Math.max(10, 100 - (data.avgWT * 5))}%`}} />
                     </div>
                   </div>
                 ))}
@@ -192,20 +191,25 @@ export default function CpuScheduling() {
           {/* Table and Config */}
           <div className="glass-card p-6 border-white/10">
             <div className="flex flex-wrap items-center justify-between gap-4 mb-6">
-               <div className="flex gap-2">
-                 {['FCFS','SJF','Priority','RR'].map(a => (
-                    <button key={a} onClick={() => { setAlgo(a); reset() }}
-                      className={`px-4 py-2 rounded-xl text-xs font-bold uppercase tracking-wider transition-all ${algo === a ? 'bg-cyan-500 text-black' : 'bg-white/5 text-gray-400 hover:text-white'}`}>
-                      {a}
-                    </button>
-                 ))}
-               </div>
-               {algo === 'RR' && (
+              <div className="flex flex-wrap gap-2"> 
+                {['FCFS','SJF','Priority','RR'].map(a => (
+                  <button 
+                    key={a} 
+                    onClick={() => { setAlgo(a); reset() }}
+                    className={`px-4 py-2 rounded-xl text-xs font-bold uppercase tracking-wider transition-all flex-1 sm:flex-none text-center ${
+                      algo === a ? 'bg-cyan-500 text-black' : 'bg-white/5 text-gray-400 hover:text-white'
+                    }`}
+                  >
+                    {a}
+                  </button>
+                ))}
+              </div>
+              {algo === 'RR' && (
                 <div className="flex items-center gap-3 bg-white/5 px-3 py-1.5 rounded-xl border border-white/10">
                   <span className="text-gray-500 text-xs font-bold uppercase">Quantum</span>
                   <input type="number" value={quantum} onChange={e=>setQuantum(e.target.value)} className="w-12 bg-transparent text-cyan-400 font-bold outline-none" />
                 </div>
-               )}
+              )}
             </div>
 
             <div className="overflow-x-auto mb-6">
@@ -258,81 +262,59 @@ export default function CpuScheduling() {
             </div>
           </div>
 
-          {/* Results Display */}
+          {/* Results Display Area */}
           {result && (
             <div className="space-y-6 animate-in slide-in-from-bottom-4 duration-500">
               {/* Gantt Chart */}
-{gantt.length > 0 && (
-  <div className="glass-card p-6">
-    <h3 className="text-white font-bold mb-6 text-sm uppercase tracking-widest">Execution Timeline (Gantt Chart)</h3>
-    
-    {/* The Chart Bar */}
-    <div className="relative h-12 w-full flex rounded-xl overflow-hidden bg-white/5 border border-white/10">
-      {gantt.map((seg, i) => (
-        <div 
-          key={i} 
-          className="h-full flex items-center justify-center text-[10px] font-black text-black border-r border-black/20 transition-all hover:brightness-110"
-          style={{ 
-            width: `${((seg.end - seg.start) / totalTime) * 100}%`, 
-            background: colorMap[seg.id] || '#4a5568',
-            minWidth: '24px' 
-          }}
-        >
-          {seg.id}
-        </div>
-      ))}
-    </div>
-
-    {/* The Aligned Timestamps */}
-    <div className="relative h-6 w-full mt-2">
-      {/* Starting Zero */}
-      <span className="absolute left-0 text-[10px] font-mono text-gray-500 transform -translate-x-1/2">0</span>
-      
-      {/* End of every segment */}
-      {gantt.map((seg, i) => (
-        <span 
-          key={i} 
-          className="absolute text-[10px] font-mono text-gray-500 transform -translate-x-1/2"
-          style={{ left: `${(seg.end / totalTime) * 100}%` }}
-        >
-          {seg.end}
-        </span>
-      ))}
-    </div>
-
-    <div className="flex flex-wrap gap-3 mt-6">
-      {processes.map(p => (
-        <div key={p.id} className="flex items-center gap-2 text-[10px] font-bold uppercase tracking-wider">
-          <div className="w-2 h-2 rounded-full" style={{ background: colorMap[p.id] }} />
-          <span className="text-gray-400">{p.id}</span>
-        </div>
-      ))}
-    </div>
-  </div>
-)}
+              {gantt.length > 0 && (
+                <div className="glass-card p-6">
+                  <h3 className="text-white font-bold mb-6 text-sm uppercase tracking-widest">Execution Timeline</h3>
+                  <div className="relative h-12 w-full flex rounded-xl overflow-hidden bg-white/5 border border-white/10">
+                    {gantt.map((seg, i) => (
+                      <div 
+                        key={i} 
+                        className="h-full flex items-center justify-center text-[10px] font-black text-black border-r border-black/20"
+                        style={{ width: `${((seg.end - seg.start) / totalTime) * 100}%`, background: colorMap[seg.id] || '#4a5568', minWidth: '24px' }}
+                      >
+                        {seg.id}
+                      </div>
+                    ))}
+                  </div>
+                  <div className="relative h-6 w-full mt-2">
+                    <span className="absolute left-0 text-[10px] font-mono text-gray-500 transform -translate-x-1/2">0</span>
+                    {gantt.map((seg, i) => (
+                      <span key={i} className="absolute text-[10px] font-mono text-gray-500 transform -translate-x-1/2" style={{ left: `${(seg.end / totalTime) * 100}%` }}>
+                        {seg.end}
+                      </span>
+                    ))}
+                  </div>
+                </div>
+              )}
 
               {/* Metrics Table */}
               <div className="glass-card overflow-hidden">
-                 <table className="w-full text-sm">
+                <div className="overflow-x-auto">
+                  <table className="w-full text-sm min-w-[500px]">
                     <thead className="bg-white/5">
-                       <tr className="text-gray-400 text-left text-[10px] uppercase tracking-widest">
-                          <th className="p-4">Process</th>
-                          <th className="p-4">Finish</th>
-                          <th className="p-4">Waiting</th>
-                          <th className="p-4">Turnaround</th>
-                       </tr>
+                      <tr className="text-gray-400 text-left text-[10px] uppercase tracking-widest">
+                        <th className="p-4">Process</th>
+                        <th className="p-4">Finish</th>
+                        <th className="p-4">Waiting</th>
+                        <th className="p-4">Turnaround</th>
+                      </tr>
                     </thead>
                     <tbody className="divide-y divide-white/5">
-                       {result.map(r => (
-                         <tr key={r.id}>
-                            <td className="p-4 font-bold" style={{color: colorMap[r.id]}}>{r.id}</td>
-                            <td className="p-4 text-white">{r.finish}ms</td>
-                            <td className="p-4 text-orange-400">{r.waiting}ms</td>
-                            <td className="p-4 text-cyan-400">{r.turnaround}ms</td>
-                         </tr>
-                       ))}
+                      {result.map(r => (
+                        <tr key={r.id}>
+                          <td className="p-4 font-bold" style={{color: colorMap[r.id]}}>{r.id}</td>
+                          <td className="p-4 text-white">{r.finish}ms</td>
+                          <td className="p-4 text-orange-400">{r.waiting}ms</td>
+                          <td className="p-4 text-cyan-400">{r.turnaround}ms</td>
+                        </tr>
+                      ))}
                     </tbody>
-                 </table>
+                  </table>
+                </div>
               </div>
             </div>
           )}
@@ -347,15 +329,15 @@ export default function CpuScheduling() {
             <div className="space-y-4">
               <div>
                 <h4 className="text-white text-xs font-bold uppercase mb-1">Convoy Effect (FCFS)</h4>
-                <p className="text-gray-400 text-xs leading-relaxed">Occurs when short processes wait for one long process to finish. Resulting in poor average waiting time.</p>
+                <p className="text-gray-400 text-xs leading-relaxed">Occurs when short processes wait for one long process to finish.</p>
               </div>
               <div>
                 <h4 className="text-white text-xs font-bold uppercase mb-1">Starvation (SJF/Priority)</h4>
-                <p className="text-gray-400 text-xs leading-relaxed">Longer or lower-priority processes may never execute if short/high-priority ones keep arriving.</p>
+                <p className="text-gray-400 text-xs leading-relaxed">Longer processes may never execute if short ones keep arriving.</p>
               </div>
               <div>
                 <h4 className="text-white text-xs font-bold uppercase mb-1">Response Time (RR)</h4>
-                <p className="text-gray-400 text-xs leading-relaxed">Round Robin is designed for time-sharing systems to ensure no process monopolizes the CPU.</p>
+                <p className="text-gray-400 text-xs leading-relaxed">Ensures no process monopolizes the CPU in time-sharing systems.</p>
               </div>
             </div>
           </div>
@@ -365,16 +347,16 @@ export default function CpuScheduling() {
             <div className="space-y-4">
               <div className="p-4 rounded-2xl bg-white/5 border border-white/5">
                 <div className="text-2xl font-bold text-orange-400">{avgWT}ms</div>
-                <div className="text-[10px] text-gray-500 uppercase font-bold tracking-widest">Average Waiting Time</div>
+                <div className="text-[10px] text-gray-500 uppercase font-bold tracking-widest">Avg Waiting Time</div>
               </div>
               <div className="p-4 rounded-2xl bg-white/5 border border-white/5">
                 <div className="text-2xl font-bold text-cyan-400">{avgTAT}ms</div>
-                <div className="text-[10px] text-gray-500 uppercase font-bold tracking-widest">Average Turnaround Time</div>
+                <div className="text-[10px] text-gray-500 uppercase font-bold tracking-widest">Avg Turnaround Time</div>
               </div>
             </div>
           </div>
         </div>
       </div>
     </div>
-  )
+  );
 }

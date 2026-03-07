@@ -99,56 +99,55 @@ export default function DiskScheduling() {
   };
 
   return (
-    <div className="min-h-screen pt-32 pb-20 px-8 max-w-7xl mx-auto bg-[#0a0a0f] text-white">
-      <Link to="/" className="inline-flex items-center gap-2 text-gray-400 hover:text-green-400 mb-10 transition-colors text-xl font-medium">
-        <ArrowLeft size={24} /> Back to Dashboard
+    <div className="min-h-screen pt-20 md:pt-32 pb-20 px-4 md:px-8 max-w-7xl mx-auto bg-[#0a0a0f] text-white">
+      <Link to="/" className="inline-flex items-center gap-2 text-gray-400 hover:text-green-400 mb-6 md:mb-10 transition-colors text-base md:text-xl font-medium">
+        <ArrowLeft size={20} /> Back to Dashboard
       </Link>
 
-      <div className="mb-14 text-left">
-        <h1 className="text-6xl font-black mb-4 bg-gradient-to-r from-green-400 to-emerald-500 text-transparent bg-clip-text">
+      <div className="mb-8 md:mb-14 text-center md:text-left">
+        <h1 className="text-3xl md:text-6xl font-black mb-4 bg-gradient-to-r from-green-400 to-emerald-500 text-transparent bg-clip-text leading-tight">
           Disk Scheduling <span className="text-white">Laboratory</span>
         </h1>
-        <p className="text-2xl text-gray-400 max-w-4xl leading-relaxed">Visualize and analyze secondary storage arm movements to optimize seek time efficiency.</p>
+        <p className="text-base md:text-2xl text-gray-400 max-w-4xl leading-relaxed">Visualize and analyze secondary storage arm movements to optimize seek time efficiency.</p>
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-4 gap-10 mb-14">
-        {/* Controls Sidebar */}
-        <div className="lg:col-span-1 space-y-8">
-          <div className="glass-card p-8 border-white/10 sticky top-32">
-            <h3 className="text-white font-bold text-base uppercase tracking-widest mb-8 flex items-center gap-3">
-              <Activity size={20} className="text-green-400" /> Lab Configuration
+      <div className="grid grid-cols-1 lg:grid-cols-4 gap-6 md:gap-10 mb-10 md:mb-14">
+        {/* Controls Sidebar - Stacked on mobile */}
+        <div className="lg:col-span-1 space-y-6 md:space-y-8">
+          <div className="glass-card p-6 md:p-8 border-white/10 lg:sticky lg:top-32">
+            <h3 className="text-white font-bold text-xs md:text-base uppercase tracking-widest mb-6 md:mb-8 flex items-center gap-3">
+              <Activity size={18} className="text-green-400" /> Lab Configuration
             </h3>
             
-            <div className="space-y-8">
+            <div className="space-y-6 md:space-y-8">
               <div>
-                <label className="text-gray-400 text-sm font-bold uppercase mb-4 block">Scheduling Strategy</label>
-                <div className="flex flex-col gap-3">
+                <label className="text-gray-400 text-[10px] md:text-sm font-bold uppercase mb-4 block">Scheduling Strategy</label>
+                <div className="grid grid-cols-2 lg:grid-cols-1 gap-2 md:gap-3">
                   {['FCFS','SSTF','SCAN','C-SCAN'].map(a => (
                     <button key={a} onClick={() => { setAlgo(a); setResult(null); }}
-                      className={`px-5 py-4 rounded-2xl text-base font-bold transition-all text-left ${algo === a ? 'bg-green-500 text-black shadow-lg shadow-green-500/20' : 'bg-white/5 text-gray-400 hover:bg-white/10'}`}>
+                      className={`px-3 md:px-5 py-3 md:py-4 rounded-xl md:rounded-2xl text-xs md:text-base font-bold transition-all text-center lg:text-left ${algo === a ? 'bg-green-500 text-black shadow-lg shadow-green-500/20' : 'bg-white/5 text-gray-400 hover:bg-white/10'}`}>
                       {a}
                     </button>
                   ))}
                 </div>
               </div>
 
-              {/* Head Position Slider Re-added */}
               <div>
-                <label className="text-gray-400 text-sm font-bold uppercase mb-4 block">Initial Head Position: <span className="text-green-400">{head}</span></label>
+                <label className="text-gray-400 text-[10px] md:text-sm font-bold uppercase mb-4 block">Initial Head: <span className="text-green-400">{head}</span></label>
                 <input type="range" min="0" max={diskSize - 1} value={head} onChange={e => {setHead(Number(e.target.value)); setResult(null);}} className="w-full h-2 bg-white/10 rounded-lg appearance-none cursor-pointer accent-green-500" />
               </div>
 
               {algo === 'SCAN' && (
                 <div>
-                  <label className="text-gray-400 text-sm font-bold uppercase mb-3 block">Movement Direction</label>
-                  <select value={direction} onChange={e => {setDirection(e.target.value); setResult(null);}} className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-4 text-base text-white focus:border-green-400 outline-none">
+                  <label className="text-gray-400 text-[10px] md:text-sm font-bold uppercase mb-3 block">Direction</label>
+                  <select value={direction} onChange={e => {setDirection(e.target.value); setResult(null);}} className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-sm md:text-base text-white outline-none">
                     <option value="right">Right (Increasing)</option>
                     <option value="left">Left (Decreasing)</option>
                   </select>
                 </div>
               )}
 
-              <button onClick={calculate} className="w-full bg-green-500 hover:bg-green-400 text-black py-5 rounded-2xl font-black text-sm uppercase tracking-widest transition-all shadow-xl shadow-green-500/10">
+              <button onClick={calculate} className="w-full bg-green-500 hover:bg-green-400 text-black py-4 md:py-5 rounded-xl md:rounded-2xl font-black text-xs md:text-sm uppercase tracking-widest transition-all shadow-xl shadow-green-500/10">
                 Start Simulation
               </button>
             </div>
@@ -156,36 +155,34 @@ export default function DiskScheduling() {
         </div>
 
         {/* Results and Main Plot */}
-        <div className="lg:col-span-3 space-y-10">
-          <div className="glass-card p-10 border-white/10 shadow-inner">
-            <label className="text-gray-400 text-sm font-bold uppercase mb-6 block">Request Queue (Track Numbers)</label>
+        <div className="lg:col-span-3 space-y-6 md:space-y-10">
+          <div className="glass-card p-6 md:p-10 border-white/10">
+            <label className="text-gray-400 text-[10px] md:text-sm font-bold uppercase mb-4 block">Request Queue (Track Numbers)</label>
             <input value={reqStr} onChange={e => {setReqStr(e.target.value); setResult(null);}}
-              className="w-full bg-black/40 border border-white/10 rounded-2xl px-8 py-8 text-3xl text-green-400 font-mono focus:border-green-500 outline-none transition-all"
-              placeholder="e.g. 98, 183, 37, 122" />
+              className="w-full bg-black/40 border border-white/10 rounded-xl md:rounded-2xl px-4 md:px-8 py-4 md:py-8 text-xl md:text-3xl text-green-400 font-mono focus:border-green-500 outline-none transition-all"
+              placeholder="e.g. 98, 183, 37" />
           </div>
 
           {result && (
-            <div className="glass-card p-12 border-white/10 animate-in fade-in slide-in-from-bottom-5 duration-700">
-              <h3 className="text-white font-bold mb-14 text-sm uppercase tracking-widest flex items-center gap-3">
-                <TrendingUp size={20} className="text-green-400" /> Seek Path Analysis (ZigZag Plot)
+            <div className="glass-card p-4 md:p-12 border-white/10 animate-in fade-in slide-in-from-bottom-5 duration-700">
+              <h3 className="text-white font-bold mb-8 md:mb-14 text-[10px] md:text-sm uppercase tracking-widest flex items-center gap-3 px-2">
+                <TrendingUp size={18} className="text-green-400" /> Seek Path Analysis
               </h3>
               
-              <div className="relative w-full">
-                {/* SVG Coordinate System mapped to raw numbers for line visibility */}
+              <div className="relative w-full overflow-x-auto no-scrollbar">
+                {/* Responsive SVG wrapper */}
                 <svg 
                   viewBox={`0 0 1000 ${result.seq.length * 60 + 100}`} 
-                  className="w-full h-auto overflow-visible"
+                  className="w-full min-w-[600px] h-auto overflow-visible"
                 >
                   <line x1="0" y1="0" x2="1000" y2="0" stroke="rgba(255,255,255,0.1)" strokeWidth="4" />
                   
-                  {/* Tracks axis labels */}
                   {[0, 50, 100, 150, 199].map(t => (
-                    <text key={t} x={(t / 199) * 1000} y="-20" textAnchor="middle" fill="#666" fontSize="16" fontWeight="bold">
+                    <text key={t} x={(t / 199) * 1000} y="-20" textAnchor="middle" fill="#666" fontSize="18" fontWeight="bold">
                       {t}
                     </text>
                   ))}
 
-                  {/* The ZigZag Movement Line */}
                   <polyline
                     fill="none"
                     stroke="#4ade80"
@@ -200,14 +197,13 @@ export default function DiskScheduling() {
                     className="drop-shadow-[0_0_15px_rgba(74,222,128,0.5)]"
                   />
 
-                  {/* Data Points (Nodes) */}
                   {result.seq.map((t, i) => {
                     const x = (t / 199) * 1000;
                     const y = i * 60 + 40;
                     return (
                       <g key={i}>
                         <circle cx={x} cy={y} r="10" fill={i === 0 ? "#fff" : "#4ade80"} />
-                        <text x={x + 25} y={y + 8} fill={i === 0 ? "#fff" : "#4ade80"} fontSize="20" fontWeight="900" fontFamily="monospace">
+                        <text x={x + 20} y={y + 8} fill={i === 0 ? "#fff" : "#4ade80"} fontSize="22" fontWeight="900" fontFamily="monospace">
                           {t}
                         </text>
                       </g>
@@ -219,14 +215,14 @@ export default function DiskScheduling() {
           )}
 
           {result && (
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-              <div className="glass-card p-10 border-green-500/20">
-                <div className="text-sm text-gray-500 font-bold uppercase tracking-widest mb-2">Total Seek Distance</div>
-                <div className="text-6xl font-black text-green-400">{result.movement} <span className="text-2xl font-normal text-gray-500">tracks</span></div>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-8">
+              <div className="glass-card p-6 md:p-10 border-green-500/20 flex flex-col justify-center">
+                <div className="text-[10px] md:text-sm text-gray-500 font-bold uppercase tracking-widest mb-2">Total Seek Distance</div>
+                <div className="text-4xl md:text-6xl font-black text-green-400">{result.movement} <span className="text-sm md:text-2xl font-normal text-gray-500 uppercase">tracks</span></div>
               </div>
-              <div className="glass-card p-10 border-cyan-500/20">
-                <div className="text-sm text-gray-500 font-bold uppercase tracking-widest mb-4">Traversal Sequence</div>
-                <div className="text-2xl font-mono text-cyan-400 flex flex-wrap gap-3">
+              <div className="glass-card p-6 md:p-10 border-cyan-500/20">
+                <div className="text-[10px] md:text-sm text-gray-500 font-bold uppercase tracking-widest mb-4">Traversal Sequence</div>
+                <div className="text-sm md:text-xl font-mono text-cyan-400 flex flex-wrap gap-2">
                   {result.seq.join(' → ')}
                 </div>
               </div>
@@ -235,34 +231,33 @@ export default function DiskScheduling() {
         </div>
       </div>
 
-      {/* Lab Theory & Observations Section Re-added */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-10 mt-16">
-        <div className="glass-card p-12 border-white/5 bg-white/[0.02]">
-          <h4 className="text-white font-bold text-2xl mb-8 flex items-center gap-3 text-green-400">
-            <BookOpen size={28} /> Lab Theory & Observations
+      {/* Lab Theory & Observations Section */}
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-10 mt-8 md:mt-16">
+        <div className="glass-card p-6 md:p-12 border-white/5 bg-white/[0.02]">
+          <h4 className="text-white font-bold text-xl md:text-2xl mb-6 md:mb-8 flex items-center gap-3 text-green-400">
+            <BookOpen size={24} /> Theory & Observations
           </h4>
-          <div className="text-gray-400 text-lg leading-relaxed space-y-6">
-            <p><strong className="text-white font-bold italic">Strategy Applied:</strong> {algo}</p>
-            <p>{algoDesc[algo]}</p>
-            <p>During the seek operation, the disk arm moves across cylinders to access data. Total seek time is estimated by calculating the absolute differences between successive cylinder requests.</p>
-            <p className="bg-green-500/10 p-5 rounded-2xl border border-green-500/20 text-green-300">
-              <Info size={20} className="inline mr-2" /> 
-              Observation: {algo === 'SSTF' ? 'SSTF minimizes total movement but can cause starvation of distant requests.' : 'Visualization shows how the arm services requests in a single directional sweep.'}
+          <div className="text-gray-400 text-sm md:text-lg leading-relaxed space-y-4 md:space-y-6">
+            <p><strong className="text-white font-bold italic">Strategy:</strong> {algo}</p>
+            <p className="text-xs md:text-lg">{algoDesc[algo]}</p>
+            <p className="bg-green-500/10 p-4 md:p-5 rounded-2xl border border-green-500/20 text-green-300 text-xs md:text-base">
+              <Info size={16} className="inline mr-2" /> 
+              {algo === 'SSTF' ? 'SSTF minimizes total movement but can cause starvation of distant requests.' : 'Visualization shows the arm servicing requests in a single sweep.'}
             </p>
           </div>
         </div>
 
-        <div className="glass-card p-12 border-white/5 bg-white/[0.02] flex flex-col justify-between">
-           <h4 className="text-white font-bold text-2xl mb-8 flex items-center gap-3 text-green-400">
-            <TrendingUp size={28} /> Performance Analysis
+        <div className="glass-card p-6 md:p-12 border-white/5 bg-white/[0.02] flex flex-col justify-between">
+           <h4 className="text-white font-bold text-xl md:text-2xl mb-6 md:mb-8 flex items-center gap-3 text-green-400">
+            <TrendingUp size={24} /> Performance
           </h4>
-          <div className="space-y-8">
-            <div className="p-8 bg-black/40 rounded-3xl border border-white/10 text-center">
-              <div className="text-sm text-gray-500 uppercase font-bold tracking-widest mb-2">Efficiency Metric</div>
-              <div className="text-4xl font-bold text-white">Seek Over-head: {result ? (result.movement / result.requests.length).toFixed(1) : '—'} <span className="text-lg">tracks/req</span></div>
+          <div className="space-y-6 md:space-y-8">
+            <div className="p-6 md:p-8 bg-black/40 rounded-3xl border border-white/10 text-center">
+              <div className="text-[10px] md:text-sm text-gray-500 uppercase font-bold tracking-widest mb-2">Efficiency Metric</div>
+              <div className="text-2xl md:text-4xl font-bold text-white">Over-head: {result ? (result.movement / result.requests.length).toFixed(1) : '—'} <span className="text-xs md:text-lg">tracks/req</span></div>
             </div>
-             <p className="text-lg text-gray-500 italic text-center leading-relaxed">
-              In a physical disk, lower traverse distance directly results in lower mechanical latency and faster data throughput.
+             <p className="text-xs md:text-lg text-gray-500 italic text-center leading-relaxed">
+               Lower traverse distance directly results in lower mechanical latency and faster data throughput.
             </p>
           </div>
         </div>
